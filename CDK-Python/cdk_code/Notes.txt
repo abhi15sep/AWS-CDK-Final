@@ -1,0 +1,22 @@
+1. cdk init sample-app --language python
+
+2. Below are some valuable online references to CDK and its various components:
+
+    API Reference
+    https://docs.aws.amazon.com/cdk/api/latest
+
+    Gitter Channel
+    https://gitter.im/awslabs/aws-cdk
+
+    Stack Overflow
+    https://stackoverflow.com/questions/tagged/aws-cdk
+
+    CDK GitHub Repository
+    https://github.com/awslabs/aws-cdk
+
+    CDK at re:Invent 2018
+    https://www.youtube.com/watch?v=Lh-kVC2r2AU
+
+3. pip install -r requirements.txt
+
+4. if need to work on lambda using CDK, don't forget to run : cdk bootstrap

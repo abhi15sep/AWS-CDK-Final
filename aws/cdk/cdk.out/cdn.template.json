@@ -1,0 +1,100 @@
+{
+  "Resources": {
+    "webhostingorigin4CF2E4E2": {
+      "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+      "Properties": {
+        "CloudFrontOriginAccessIdentityConfig": {
+          "Comment": "Allows CloudFront to reach the bucket"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdn/webhosting-origin/Resource"
+      }
+    },
+    "webhostingcdnCFDistribution1D75AAA9": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "DefaultCacheBehavior": {
+            "AllowedMethods": [
+              "GET",
+              "HEAD"
+            ],
+            "CachedMethods": [
+              "GET",
+              "HEAD"
+            ],
+            "Compress": true,
+            "ForwardedValues": {
+              "Cookies": {
+                "Forward": "none"
+              },
+              "QueryString": false
+            },
+            "TargetOriginId": "origin1",
+            "ViewerProtocolPolicy": "redirect-to-https"
+          },
+          "DefaultRootObject": "index.html",
+          "Enabled": true,
+          "HttpVersion": "http2",
+          "IPV6Enabled": true,
+          "Origins": [
+            {
+              "DomainName": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::ImportValue": "webhosting-bucket"
+                    },
+                    ".s3.",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ".",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "Id": "origin1",
+              "OriginPath": "/build",
+              "S3OriginConfig": {
+                "OriginAccessIdentity": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "origin-access-identity/cloudfront/",
+                      {
+                        "Ref": "webhostingorigin4CF2E4E2"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "PriceClass": "PriceClass_100",
+          "ViewerCertificate": {
+            "CloudFrontDefaultCertificate": true
+          },
+          "WebACLId": "0dd41cae-5896-4f03-b9c6-50faab8c6bcc"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdn/webhosting-cdn/CFDistribution"
+      }
+    }
+  },
+  "Outputs": {
+    "cdnid": {
+      "Value": {
+        "Ref": "webhostingcdnCFDistribution1D75AAA9"
+      },
+      "Export": {
+        "Name": "distribution-id"
+      }
+    }
+  }
+}
